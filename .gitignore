@@ -1,0 +1,6 @@
+*.pyc
+.DS_Store
+.virtualenv/
+build/
+dist/
+pelican_dashify.egg-info/
