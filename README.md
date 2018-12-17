@@ -1,7 +1,7 @@
 Pelican-dashify
 ===============
 
-Pelican-dashify allows you to convert proper MPEG-DASH content generated from your videos with Pelican.
+Pelican-dashify let you to convert proper MPEG-DASH content generated from your videos with Pelican.
 
 
 Features
@@ -123,89 +123,89 @@ To define a video configuration, like a custom DASH profile for `BigBuckBunny.mp
 
 ### General
 
-DASHIFY_EXTRACT_TAGS
+**DASHIFY_EXTRACT_TAGS**
 :	Inject the original video tags into the template variable `{{ <metaname>.tags }}`. Default to `False`.
 
-DASHIFY_CACHE_PATH
+**DASHIFY_CACHE_PATH**
 :	Use a custom path to store the representations transcoded from the original video.
 	By default, dashify will store them into the content directory. Default to `None`.
 
-DASHIFY_FFMPEG_BIN
+**DASHIFY_FFMPEG_BIN**
 :	Specific path to use for the ffmpeg binary, libav can be used. Default to `ffmpeg`.
 
-DASHIFY_FFPROBE_BIN
+**DASHIFY_FFPROBE_BIN**
 :	Specific path to use for the ffprobe binary. Default to `ffprobe`.
 
-DASHIFY_MP4BOX_BIN
+**DASHIFY_MP4BOX_BIN**
 :	Specific path to use for the MP4Box binary. Default to `MP4Box`.
 
-DASHIFY_METATAG
+**DASHIFY_METATAG**
 :	Tag used to prefix video to be DASHified. Default to `{dashify}`.
 
 ### Transcoding
 
-DASHIFY_RESOLUTION_DIVISOR
+**DASHIFY_RESOLUTION_DIVISOR**
 :	The divisor used to downscale the resolution of representations. Default is `2`.  
 	For a 720p formatted input, the 1280x720, 640x360 and 320x180 will be generated with `DASHIFY_VIDEO_REPRESENTATIONS` set to 3.
 
-DASHIFY_VIDEO_REPRESENTATIONS
+**DASHIFY_VIDEO_REPRESENTATIONS**
 :	How many representations to generate. Default to `3`.
 
-DASHIFY_SEGMENT_DURATION
+**DASHIFY_SEGMENT_DURATION**
 :	The time of a DASH segment in seconds, used to switch between the different video/audio qualities.  
 	Dashify will compute the ffmpeg keyint accordingly. Default to `4`.
 
-DASHIFY_BITS_PER_PIXEL
+**DASHIFY_BITS_PER_PIXEL**
 :	The BPP used to compute the bitrate for a given resolution. Default to `0.1`.
 
-DASHIFY_DASH_PROFILE
+**DASHIFY_DASH_PROFILE**
 :	Choices are : `onDemand`, `live`, `main`, `simple`, `full`, `dashavc264:live`, `dashavc264:onDemand`.  
 	Default to `onDemand`.
 
 ### Video
 
-DASHIFY_FRAMERATE
+**DASHIFY_FRAMERATE**
 :	The frames per second to use on representations. Default to `24`fps.
 
-DASHIFY_X264_PRESET
+**DASHIFY_X264_PRESET**
 :	Preset used by ffmpeg on transcoding. Default to `slow` for a better rendering.  
 	Choices are : `ultrafast`, `superfast`, `veryfast`, `faster`, `fast`, `medium`, `slow`, `slower`, `veryslow`.  
 	For more info check the [ffmpeg wiki](https://trac.ffmpeg.org/wiki/Encode/H.264#Preset).
 
-DASHIFY_VIDEO_STREAM_INDEX
+**DASHIFY_VIDEO_STREAM_INDEX**
 :	Select a given stream from the input container. Default to `0` for the first available one.
 
-DASHIFY_VIDEO_MAX_WIDTH
+**DASHIFY_VIDEO_MAX_WIDTH**
 :	Skip representation if computed width is greater then value. Default to `7680` (8K).
 
-DASHIFY_VIDEO_MAX_HEIGHT
+**DASHIFY_VIDEO_MAX_HEIGHT**
 :	Skip representation if computed height is greater then value. Default to `4320` (8K).
 
-DASHIFY_VIDEO_MAX_BITRATE
+**DASHIFY_VIDEO_MAX_BITRATE**
 :	Skip representation if computed bitrate is greater then value. Default to `79626` (8K w/ 0.1 BPP @ 24fps).
 
-DASHIFY_VIDEO_MIN_WIDTH
+**DASHIFY_VIDEO_MIN_WIDTH**
 :	Skip representation if computed width is lower then value. Default to `128`.
 
-DASHIFY_VIDEO_MIN_HEIGHT
+**DASHIFY_VIDEO_MIN_HEIGHT**
 :	Skip representation if computed height is lower then value. Default to `72`.
 
-DASHIFY_VIDEO_MIN_BITRATE
+**DASHIFY_VIDEO_MIN_BITRATE**
 :	Skip representation if computed bitrate width is lower then value. Default to `22`.
 
 ### Audio
 
-DASHIFY_AUDIO_STREAM_INDEX
+**DASHIFY_AUDIO_STREAM_INDEX**
 :	Select a given stream from the input container. Default to `0` for the first available one.
 
-DASHIFY_AUDIO_CODEC
+**DASHIFY_AUDIO_CODEC**
 :	Codec to use on audio transcoding. Default to `aac`.
 
-DASHIFY_AUDIO_CHANNELS
+**DASHIFY_AUDIO_CHANNELS**
 :	Number of audio channels. Default to `2`.
 
-DASHIFY_AUDIO_BITRATE
+**DASHIFY_AUDIO_BITRATE**
 :	Default to `128`k.
 
-DASHIFY_AUDIO_DISABLE
+**DASHIFY_AUDIO_DISABLE**
 :	Disable audio. Default to `False`.
