@@ -16,6 +16,7 @@ setup(
     license="MIT",
 
     packages=["pelican_dashify"],
+    include_package_data=True,
     python_requires=">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*",
     install_requires=["pelican>=3.7"],
     classifiers=[
