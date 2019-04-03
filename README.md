@@ -1,7 +1,7 @@
 Pelican-dashify
 ===============
 
-Pelican-dashify let you to convert proper MPEG-DASH content generated from your videos with Pelican.
+Pelican-dashify let you convert proper MPEG-DASH content generated from your videos with Pelican.
 
 
 Features
