@@ -56,5 +56,5 @@ def load_video_config(path):
 
 def register_settings(pelican):
 
-    for k, v in DEFAULT_CONFIG.iteritems():
+    for k, v in DEFAULT_CONFIG.items():
         pelican.settings.setdefault(k, v)
