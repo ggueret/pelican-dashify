@@ -1,6 +1,9 @@
 Pelican-dashify
 ===============
 
+[![License](https://img.shields.io/pypi/l/pelican-dashify.svg)](https://github.com/ggueret/pelican-dashify/blob/master/LICENSE)
+[![Build Status](https://img.shields.io/travis/ggueret/pelican-dashify/master.svg)](https://travis-ci.org/ggueret/pelican-dashify)
+
 Pelican-dashify let you convert proper MPEG-DASH content generated from your videos with Pelican.
 
 
