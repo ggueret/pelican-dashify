@@ -31,9 +31,7 @@ def select_stream_by_typed_index(ffprobe_streams, index, codec_type=None):
 
 def run_command(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE, *args, **kwargs):
 
-    if six.PY2 and isinstance(command,  unicode):
-        command = shlex.split(command)
-    elif isinstance(command,  str):
+    if isinstance(command,  six.text_type):
         command = shlex.split(command)
 
     process = subprocess.Popen(command, stdout=stdout, stderr=stderr)
@@ -216,12 +214,7 @@ def discover_dashify(generator, content):
 
     for k, v in content.metadata.items():
 
-        if six.PY2:
-            isunicode = isinstance(v, unicode)
-        else:
-            isunicode = isinstance(v, str)
-
-        if isunicode and v.startswith(content.settings["DASHIFY_METATAG"]):
+        if isinstance(v, six.text_type) and v.startswith(content.settings["DASHIFY_METATAG"]):
             input_relpath = v.strip(content.settings["DASHIFY_METATAG"])
 
             try:
