@@ -231,4 +231,4 @@ def dashify_videos(generators):
         discover_dashify(articles_generator, article)
 
     for page in pages_generator.pages:
-        discover_dashify(articles_generator, article)
+        discover_dashify(pages_generator, page)
