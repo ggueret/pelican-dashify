@@ -8,6 +8,7 @@ import shlex
 import logging
 import datetime
 import subprocess
+import six
 
 from .settings import DEFAULT_CONFIG, load_video_config
 from .exceptions import VideoProbeError, VideoStreamError, PackingError, AudioTranscodeError, VideoTranscodeError
@@ -30,7 +31,9 @@ def select_stream_by_typed_index(ffprobe_streams, index, codec_type=None):
 
 def run_command(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE, *args, **kwargs):
 
-    if isinstance(command, str):
+    if six.PY2 and isinstance(command,  unicode):
+        command = shlex.split(command)
+    elif isinstance(command,  str):
         command = shlex.split(command)
 
     process = subprocess.Popen(command, stdout=stdout, stderr=stderr)
@@ -213,7 +216,12 @@ def discover_dashify(generator, content):
 
     for k, v in content.metadata.items():
 
-        if isinstance(v, str) and v.startswith(content.settings["DASHIFY_METATAG"]):
+        if six.PY2:
+            isunicode = isinstance(v, unicode)
+        else:
+            isunicode = isinstance(v, str)
+
+        if isunicode and v.startswith(content.settings["DASHIFY_METATAG"]):
             input_relpath = v.strip(content.settings["DASHIFY_METATAG"])
 
             try:
