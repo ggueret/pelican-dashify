@@ -8,6 +8,7 @@ import shlex
 import logging
 import datetime
 import subprocess
+import six
 
 from .settings import DEFAULT_CONFIG, load_video_config
 from .exceptions import VideoProbeError, VideoStreamError, PackingError, AudioTranscodeError, VideoTranscodeError
@@ -30,7 +31,7 @@ def select_stream_by_typed_index(ffprobe_streams, index, codec_type=None):
 
 def run_command(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE, *args, **kwargs):
 
-    if isinstance(command, unicode):
+    if isinstance(command,  six.text_type):
         command = shlex.split(command)
 
     process = subprocess.Popen(command, stdout=stdout, stderr=stderr)
@@ -145,7 +146,7 @@ def dashify_video(generator, content, input_relpath, keyword):
     if not os.path.isfile(input_path):
         raise VideoProbeError("The file '{}' does not exist.".format(input_path))
 
-    settings = {k: content.settings[k] for k in DEFAULT_CONFIG.iterkeys()}
+    settings = {k: content.settings[k] for k in DEFAULT_CONFIG.keys()}
     settings.update(load_video_config(input_path))
 
     input_info = load_input_info(input_path, settings)
@@ -157,7 +158,7 @@ def dashify_video(generator, content, input_relpath, keyword):
         raise VideoStreamError("cannot find a valid video stream with index %{}".format(settings["DASHIFY_VIDEO_STREAM_INDEX"]))
 
     sexagesimal_parsed = re.match(settings["DASHIFY_SEXAGESIMAL_REGEX"], input_info["format"]["duration"]).groupdict()
-    output_info["duration"] = datetime.timedelta(**{k: int(v) for k, v in sexagesimal_parsed.iteritems()})
+    output_info["duration"] = datetime.timedelta(**{k: int(v) for k, v in sexagesimal_parsed.items()})
 
     if settings["DASHIFY_EXTRACT_TAGS"]:
         # todo: python native types
@@ -211,9 +212,9 @@ def dashify_video(generator, content, input_relpath, keyword):
 
 def discover_dashify(generator, content):
 
-    for k, v in content.metadata.iteritems():
+    for k, v in content.metadata.items():
 
-        if isinstance(v, unicode) and v.startswith(content.settings["DASHIFY_METATAG"]):
+        if isinstance(v, six.text_type) and v.startswith(content.settings["DASHIFY_METATAG"]):
             input_relpath = v.strip(content.settings["DASHIFY_METATAG"])
 
             try:
