@@ -112,7 +112,7 @@ def transcode_audio_stream(input_path, output_path, stream, bitrate, settings):
     )
     retcode, stdout, stderr = run_command(command)
 
-    if retcode is not 0:
+    if retcode != 0:
         raise AudioTranscodeError(
             "ffmpeg return code {}, stderr: {}".format(retcode, stderr))
 
@@ -137,7 +137,7 @@ def transcode_video_stream(input_path, output_path, stream, width, height,
     )
     retcode, stdout, stderr = run_command(command)
 
-    if retcode is not 0:
+    if retcode != 0:
         raise VideoTranscodeError(
             "ffmpeg return code {}, stderr: {}".format(retcode, stderr))
 
@@ -153,7 +153,7 @@ def generate_dash_manifest(representations, output_path, settings):
     )
     retcode, stdout, stderr = run_command(command)
 
-    if retcode is not 0:
+    if retcode != 0:
         raise PackingError(
             "MP4Box return code {}, sderr: {}".format(retcode, stderr))
 
