@@ -9,7 +9,7 @@ EXAMPLE_DIRECTORY = os.path.join(PARENT_DIRECTORY, "example")
 def test_project_example(tmp_path_factory):
     from pelican import Pelican, read_settings
 
-    OUTPUT_PATH = tmp_path_factory.getbasetemp()
+    OUTPUT_PATH = str(tmp_path_factory.getbasetemp())
 
     settings = read_settings(
         os.path.join(EXAMPLE_DIRECTORY, "pelicanconf.py"),
