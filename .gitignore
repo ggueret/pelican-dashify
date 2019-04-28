@@ -5,3 +5,4 @@
 build/
 dist/
 pelican_dashify.egg-info/
+example/output/*
