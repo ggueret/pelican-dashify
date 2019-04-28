@@ -3,6 +3,7 @@ from __future__ import unicode_literals
 
 import os
 import re
+import sys
 import json
 import shlex
 import logging
@@ -96,7 +97,7 @@ def load_input_info(path, settings):
         raise VideoProbeError(
             "ffprobe failed with code {}, stderr: {}".format(retcode, stderr))
 
-    return json.loads(stdout)
+    return json.loads(stdout.decode(sys.stdout.encoding))
 
 
 def transcode_audio_stream(input_path, output_path, stream, bitrate, settings):
