@@ -2,7 +2,7 @@ Pelican-dashify
 ===============
 
 [![License](https://img.shields.io/pypi/l/pelican-dashify.svg)](https://github.com/ggueret/pelican-dashify/blob/master/LICENSE)
-[![Supported Python Versions](https://img.shields.io/pypi/pyversions/pelican-dashify.svg)](https://travis-ci.org/ggueret/pelican-dashify)
+[![Supported Python Versions](https://img.shields.io/pypi/pyversions/pelican-dashify.svg)](https://pypi.org/project/pelican-dashify/)
 [![Build Status](https://img.shields.io/travis/ggueret/pelican-dashify/master.svg)](https://travis-ci.org/ggueret/pelican-dashify)
 
 
