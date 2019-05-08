@@ -12,7 +12,7 @@ setup(
     description="Pelican-dashify let you to convert proper MPEG-DASH content "
                 "generated from your videos with Pelican.",
     long_description=open(os.path.join(
-        BASEDIR_PATH, "README.md"), "r").decode("utf-8").read(),
+        BASEDIR_PATH, "README.md"), "r").read().decode("utf-8"),
     long_description_content_type="text/markdown",
     url="https://github.com/ggueret/pelican-dashify",
     license="MIT",
