@@ -222,8 +222,8 @@ Authors
 ### Maintainers
 
 **Geoffrey Guéret**
-: @ggueret is the author and the current maintainer of pelican-dashify.
+: [@ggueret](https://github.com/ggueret) is the author and the current maintainer of pelican-dashify.
 
 ### Contributors
 **Marcus Scheunemann**
-: @scheunemann is the first contributor of pelican-dashify who provide the Python 3 compatibility, helpful patches and great ideas.
+: [@scheunemann](https://github.com/scheunemann) is the first contributor of pelican-dashify who provide the Python 3 compatibility, helpful patches and great ideas.
