@@ -214,3 +214,16 @@ To define a video configuration, like a custom DASH profile for `BigBuckBunny.mp
 
 **DASHIFY_AUDIO_DISABLE**
 :	Disable audio. Default to `False`.
+
+
+Authors
+-------
+
+### Maintainers
+
+**Geoffrey Guéret**
+: @ggueret is the author and the current maintainer of pelican-dashify.
+
+### Contributors
+**Marcus Scheunemann**
+: @scheunemann is the first contributor of pelican-dashify who provide the Python 3 compatibility, helpful patches and great ideas.
