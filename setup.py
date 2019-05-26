@@ -9,15 +9,14 @@ setup(
     version=open(os.path.join(BASEDIR_PATH, "VERSION"), "r").read().rstrip(),
     author="Geoffrey GUERET",
     author_email="geoffrey@stocka.net",
-
     description="Pelican-dashify let you to convert proper MPEG-DASH content "
-                "generated from your videos with Pelican.",
-    long_description=io.open(os.path.join(
-        BASEDIR_PATH, "README.md"), "r", encoding="utf-8").read(),
+    "generated from your videos with Pelican.",
+    long_description=io.open(
+        os.path.join(BASEDIR_PATH, "README.md"), "r", encoding="utf-8"
+    ).read(),
     long_description_content_type="text/markdown",
     url="https://github.com/ggueret/pelican-dashify",
     license="MIT",
-
     packages=["pelican_dashify"],
     include_package_data=True,
     python_requires=">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*, !=3.4.*",
@@ -37,6 +36,6 @@ setup(
         "Programming Language :: Python :: 3.7",
         "Topic :: Internet :: WWW/HTTP",
         "Topic :: Multimedia :: Video :: Conversion",
-        "Topic :: Software Development :: Libraries :: Python Modules"
-    ]
+        "Topic :: Software Development :: Libraries :: Python Modules",
+    ],
 )

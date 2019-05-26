@@ -6,4 +6,4 @@ def timedelta_as_string(td):
 
 
 def register_filters(pelican):
-    pelican.settings["JINJA_FILTERS"]["timedelta_as_string"] = timedelta_as_string  # noqa: E501
+    pelican.settings["JINJA_FILTERS"]["timedelta_as_string"] = timedelta_as_string
