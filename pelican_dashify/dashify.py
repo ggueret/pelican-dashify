@@ -1,6 +1,3 @@
-from __future__ import division
-from __future__ import unicode_literals
-
 import os
 import re
 import sys
@@ -9,7 +6,6 @@ import shlex
 import logging
 import datetime
 import subprocess
-import six
 
 from .settings import DEFAULT_CONFIG, load_video_config
 from .exceptions import (
@@ -40,7 +36,7 @@ def run_command(
     command, stdout=subprocess.PIPE, stderr=subprocess.PIPE, *args, **kwargs
 ):
 
-    if isinstance(command, six.text_type):
+    if isinstance(command, str):
         command = shlex.split(command)
 
     process = subprocess.Popen(command, stdout=stdout, stderr=stderr)
@@ -295,7 +291,7 @@ def discover_dashify(generator, content):
 
     for k, v in content.metadata.items():
 
-        if isinstance(v, six.text_type) and v.startswith(
+        if isinstance(v, str) and v.startswith(
             content.settings["DASHIFY_METATAG"]
         ):
             input_relpath = v.strip(content.settings["DASHIFY_METATAG"])
