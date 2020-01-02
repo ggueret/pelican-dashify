@@ -19,7 +19,7 @@ setup(
     license="MIT",
     packages=["pelican_dashify"],
     include_package_data=True,
-    python_requires=">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*, !=3.4.*",
+    python_requires=">=3.5",
     install_requires=["pelican>=3.7"],
     test_requires=["pytest>=4.4"],
     classifiers=[
@@ -28,8 +28,6 @@ setup(
         "Framework :: Pelican",
         "License :: OSI Approved :: MIT License",
         "Operating System :: OS Independent",
-        "Programming Language :: Python :: 2",
-        "Programming Language :: Python :: 2.7",
         "Programming Language :: Python :: 3",
         "Programming Language :: Python :: 3.5",
         "Programming Language :: Python :: 3.6",
