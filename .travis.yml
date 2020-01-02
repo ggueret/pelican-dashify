@@ -9,4 +9,4 @@ matrix:
     - env: TOXENV=py35
 before_install:
   - docker pull ggueret/pelican-dashify
-script: docker run -e "TOXENV=$TOXENV" -v "$(pwd):/usr/src/app" ggueret/pelican-dashify
+script: make test
