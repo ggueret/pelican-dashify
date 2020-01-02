@@ -24,26 +24,34 @@ DEFAULT_CONFIG = {
     "DASHIFY_AUDIO_BITRATE": 128,  # in kbps
     "DASHIFY_AUDIO_DISABLE": False,
     "DASHIFY_AUDIO_STREAM_INDEX": 0,
-    "DASHIFY_INFO_COMMAND": "{ffprobe} -v quiet -print_format json "
-    "-show_format -show_streams -sexagesimal {input}",
-    "DASHIFY_SEXAGESIMAL_REGEX": (
-        r"(?P<hours>\d+):(?P<minutes>\d+)+" r":(?P<seconds>\d+)\.(?P<microseconds>\d+)"
+    "DASHIFY_INFO_COMMAND": (
+        "{ffprobe} -v quiet -print_format json "
+        "-show_format -show_streams -sexagesimal {input}"
     ),
-    "DASHIFY_VIDEO_TRANSCODE_COMMAND": "{ffmpeg} -y -hide_banner -i {input} "
-    "-an -c:v libx264 -r {framerate} "
-    "-b:v:{stream} {bitrate}k "
-    "-maxrate {maxrate}k "
-    "-bufsize {bufsize}k "
-    "-preset {preset} "
-    "-x264opts keyint={keyint}:min-keyint={keyint}:no-scenecut "  # noqa: E501
-    "-vf scale={width}:{height} "
-    "-movflags +faststart {output}",
-    "DASHIFY_AUDIO_TRANSCODE_COMMAND": "{ffmpeg} -y -hide_banner -i {input} "
-    "-vn -c:a:{stream} {codec} "
-    "-ac {channels} -ab {bitrate}k "
-    "{output}",
-    "DASHIFY_PACK_COMMAND": "{mp4box} -dash {segsize} -rap -bs-switching no "
-    "-profile {profile} -out {output} {input}",
+    "DASHIFY_SEXAGESIMAL_REGEX": (
+        r"(?P<hours>\d+):(?P<minutes>\d+)+"
+        r":(?P<seconds>\d+)\.(?P<microseconds>\d+)"
+    ),
+    "DASHIFY_VIDEO_TRANSCODE_COMMAND": (
+        "{ffmpeg} -y -hide_banner -i {input} "
+        "-an -c:v libx264 -r {framerate} "
+        "-b:v:{stream} {bitrate}k "
+        "-maxrate {maxrate}k "
+        "-bufsize {bufsize}k "
+        "-preset {preset} "
+        "-x264opts keyint={keyint}:min-keyint={keyint}:no-scenecut "
+        "-vf scale={width}:{height} "
+        "-movflags +faststart {output}"
+    ),
+    "DASHIFY_AUDIO_TRANSCODE_COMMAND": (
+        "{ffmpeg} -y -hide_banner -i {input} "
+        "-vn -c:a:{stream} {codec} "
+        "-ac {channels} -ab {bitrate}k {output}"
+    ),
+    "DASHIFY_PACK_COMMAND": (
+        "{mp4box} -dash {segsize} -rap -bs-switching no "
+        "-profile {profile} -out {output} {input}"
+    ),
     "DASHIFY_FFMPEG_BIN": "ffmpeg",
     "DASHIFY_FFPROBE_BIN": "ffprobe",
     "DASHIFY_MP4BOX_BIN": "MP4Box",
