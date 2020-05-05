@@ -9,3 +9,6 @@ build:
 
 push:
 	docker push ggueret/pelican-dashify
+
+shell:
+	docker run -v "${CURDIR}:/usr/src/app" -ti ggueret/pelican-dashify /bin/bash
