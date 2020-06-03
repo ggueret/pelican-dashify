@@ -6,8 +6,7 @@ import shlex
 import logging
 import datetime
 import subprocess as sp
-
-from .settings import DEFAULT_CONFIG, load_video_config
+from .settings import load_settings, extract_dashify_settings
 from .exceptions import (
     AudioTranscodeError,
     PackingError,
@@ -15,6 +14,7 @@ from .exceptions import (
     VideoStreamError,
     VideoTranscodeError
 )
+
 
 SETTINGS_PREFIX = "DASHIFY_"
 
@@ -169,17 +169,19 @@ def generate_dash_manifest(representations, output_path, settings):
             "MP4Box return code {}, sderr: {}".format(retcode, stderr))
 
 
-def dashify_video(generator, content, input_relpath, keyword):
+def dashify_video(input_relpath, **custom_settings):
+    """Dashify a video with the given options"""
+    from . import pelican
+    input_path = os.path.join(pelican.settings["PATH"], input_relpath)
+    output_dir = os.path.join(pelican.settings["OUTPUT_PATH"], input_relpath)
 
-    input_path = os.path.join(generator.path, input_relpath)
-    output_dir = os.path.join(generator.output_path, input_relpath)
+    media_context = {}
+
+    print("into dashify directive for", input_relpath)
+    settings = load_settings(extract_dashify_settings(pelican.settings), custom_settings)  # noqa: E501
 
     if not os.path.isfile(input_path):
         raise VideoProbeError("The file '{}' does not exist.".format(input_path))  # noqa: E501
-
-    pad = len(SETTINGS_PREFIX)
-    settings = {k[pad:]: content.settings[k] for k in DEFAULT_CONFIG.keys()}
-    settings.update(load_video_config(input_path))
 
     input_info = load_input_info(input_path, settings)
     output_info = {}
@@ -269,13 +271,24 @@ def dashify_video(generator, content, input_relpath, keyword):
     manifest_name = "manifest.mpd"
     manifest_path = os.path.join(output_dir, manifest_name)
 
+    # Build up the video manifest URL regarding pelican settings
+    media_context["manifest_url"] = os.path.join(
+        pelican.settings["SITEURL"],
+        input_relpath,
+        manifest_name
+    )
+
+    # Build up the poster image URL if given
+    if "poster" in custom_settings:
+        media_context["poster_url"] = os.path.join(
+            pelican.settings["SITEURL"], custom_settings["poster"])
+
     if not os.path.exists(manifest_path):
         logging.info("Generate DASH manifest for %s", input_relpath)
         generate_dash_manifest(output_paths, manifest_path, settings)
 
     output_info["url"] = os.path.join(input_relpath, manifest_name)
-
-    setattr(content, keyword, output_info)
+    return media_context
 
 
 def discover_dashify(generator, content):

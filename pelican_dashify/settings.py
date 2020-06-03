@@ -5,6 +5,18 @@ DEFAULT_CONFIG = {
     "DASHIFY_EXTRACT_TAGS": True,
     "DASHIFY_CACHE_PATH": None,
     # bitrate computed from 0.1bpp @ 24fps
+    "DASHIFY_HTML_TAG": (
+        # Jinja Template
+        '<video src="{{ manifest_url }}"'
+        '{{ " controls" if controls is defined else "" }}'
+        '{{ " autoplay" if autoplay is defined else "" }}'
+        '{{ " muted" if muted is defined else "" }}'
+        '{{ " loop" if loop is defined else "" }}'
+        '{{ " crossorigin" if crossorigin is defined else "" }}'
+        '{{ " playsinline" if playsinline is defined else "" }}'
+        '{% if poster %} poster="{{ poster_url }}"{% endif %}'
+        '></video>'
+    ),
     "DASHIFY_VIDEO_MAX_WIDTH": 7680,
     "DASHIFY_VIDEO_MAX_HEIGHT": 4320,
     "DASHIFY_VIDEO_MAX_BITRATE": 79626,
@@ -57,9 +69,34 @@ DEFAULT_CONFIG = {
     "DASHIFY_MP4BOX_BIN": "MP4Box",
 }
 
+SETTINGS_PREFIX = "DASHIFY_"
+
+
+def extract_dashify_settings(pelican_settings):
+    """Extract specific settings of Dashify from Pelican settings"""
+    pad = len(SETTINGS_PREFIX)
+    return {k[pad:]: pelican_settings[k] for k in DEFAULT_CONFIG.keys()}
+
+
+def load_settings(*ordered_settings):
+    """Load Dashify settings using precedence from given settings"""
+    pad = len(SETTINGS_PREFIX)
+    settings = {}
+    for key, default_value in DEFAULT_CONFIG.items():
+        key = key[pad:]
+        for candidate_settings in ordered_settings:
+            if key in candidate_settings or key.lower() in candidate_settings:
+                settings[key.upper()] = candidate_settings[key]
+                break
+
+        if key not in settings:
+            settings[key] = default_value
+
+    return settings
+
 
 def load_video_config(path):
-
+    """Load video configuration file from video path"""
     try:
         with open(path + ".dashify.config", "rb") as raw_video_config:
             return json.load(raw_video_config)
@@ -69,6 +106,6 @@ def load_video_config(path):
 
 
 def register_settings(pelican):
-
+    # Registering the Dashify plugin settings to Pelican globals
     for k, v in DEFAULT_CONFIG.items():
         pelican.settings.setdefault(k, v)
