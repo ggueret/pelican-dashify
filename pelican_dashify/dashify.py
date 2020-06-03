@@ -300,7 +300,7 @@ def discover_dashify(generator, content):
             input_relpath = v.strip(METATAG)
 
             try:
-                dashify_video(generator, content, input_relpath, k)
+                dashify_video(input_relpath)
 
             except Exception:
                 logging.exception("dashify errored")
