@@ -33,8 +33,9 @@ RUN apt-get update && apt-get -y install --no-install-recommends \
 	gstreamer1.0-tools gstreamer1.0-plugins-base && \
 	rm -rf /var/lib/apt/lists/*
 
-#COPY . /usr/src/app
+COPY . /usr/src/app
 WORKDIR /usr/src/app
 
 RUN pip install --upgrade pip && pip install tox
+RUN pip install -e ".[testing]"
 CMD ["tox"]
