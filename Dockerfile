@@ -26,7 +26,7 @@ RUN apt-get update && apt-get -y install --no-install-recommends ${FFMPEG_BUILD_
 	cd / && rm -rf /tmp/ffmpeg/ && apt-get remove -y ${FFMPEG_BUILD_PACKAGES} && rm -rf /var/lib/apt/lists/*
 
 # make Python 3.8 as default version
-RUN ln -sf /usr/local/bin/python3.8 /usr/local/bin/python && ln -sf /usr/local/bin/pip3.6 /usr/local/bin/pip
+RUN ln -sf /usr/local/bin/python3.8 /usr/local/bin/python && ln -sf /usr/local/bin/pip3.8 /usr/local/bin/pip
 
 # Install test packages
 RUN apt-get update && apt-get -y install --no-install-recommends \
