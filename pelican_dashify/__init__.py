@@ -1,7 +1,7 @@
 from pelican import signals
+from .config import register_settings
 from .dashify import dashify_videos
 from .filters import register_filters
-from .settings import register_settings
 from .directives import register_directives
 
 
