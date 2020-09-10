@@ -5,19 +5,32 @@ from jinja2 import Environment, BaseLoader
 from .dashify import dashify_video
 
 
+def boolean_option(argument):
+    if not argument or not argument.strip():
+        return True
+
+    cleaned_argument = argument.strip().lower()
+    if cleaned_argument in ("1", "true", "yes", "y"):
+        return True
+    elif cleaned_argument in ("0", "false", "no", "n"):
+        return False
+
+    raise ValueError(
+        "unknown boolean value supplied, could be: "
+        "(empty), 0/1, true/false, yes/no, y/n")
+
+
 class Dashify(Directive):
-    # TODO: rename stream as track, eg `audio_stream_index`
     has_content = True
     required_arguments = 1
     optional_arguments = 0
-    option_spec_html = {
-        # video node options
-        "autoplay": directives.flag,
-        "controls": directives.flag,
-        "muted": directives.flag,
-        "loop": directives.flag,
-        "crossorigin": directives.flag,
-        "playsinline": directives.flag,
+    option_spec_player = {
+        "autoplay": boolean_option,
+        "controls": boolean_option,
+        "muted": boolean_option,
+        "loop": boolean_option,
+        "crossorigin": boolean_option,
+        "playsinline": boolean_option,
         "preload": lambda arg: directives.choice(arg, (
             "none", "metadata", "auto"
         )),
@@ -28,7 +41,7 @@ class Dashify(Directive):
         "id": directives.unchanged
     }
     option_spec_transcoding = {
-        "extract_tags": directives.flag,
+        "extract_tags": boolean_option,
         "segment_duration": directives.positive_int,
         "bits_per_pixels": float,
         "framerate": directives.positive_int,
@@ -46,31 +59,51 @@ class Dashify(Directive):
         )),
         "audio_channels": directives.positive_int,
         "audio_bitrate": directives.positive_int,
-        "audio_disable": directives.flag,
+        "audio_disable": boolean_option,
         "audio_stream_index": directives.positive_int
     }
 
     option_spec = {"path": directives.path}
-    option_spec.update(option_spec_html)
+    option_spec.update(option_spec_player)
     option_spec.update(option_spec_transcoding)
 
+    def _load_settings(self):
+        options = self._build_prefixed_options()
+        return self._load_merged_settings(options)
+
+    def _build_prefixed_options(self):
+        """Transforms player options to """
+        settings = {}
+        for k, v in self.options.items():
+            if k in self.option_spec_player:
+                k = "PLAYER_{}".format(k)
+            settings[k.upper()] = True if v is None else v
+        return settings
+
+    def _load_merged_settings(self, custom_settings):
+        """
+        Returns a dict containing settings built from global and customs.
+        """
+        from .config import settings as global_settings
+        settings = global_settings.copy()
+        settings.update(custom_settings)
+        return settings
+
     def run(self):
-        from . import pelican
+        settings = self._load_settings()
         jinja_env = Environment(loader=BaseLoader)
-        html_tag = jinja_env.from_string(pelican.settings["DASHIFY_HTML_TAG"])
+        player_template = jinja_env.from_string(settings["PLAYER_TEMPLATE"])
 
         # handle custom HTML tag passed as content, render it with jinja
         if self.content:
-            html_tag = jinja_env.from_string('\n'.join(self.content))
+            player_template = jinja_env.from_string('\n'.join(self.content))
 
         relpath = directives.path(self.arguments[0])
-        video_context = dashify_video(relpath, **self.options)
+        player_context = dashify_video(relpath, **settings)
 
         # inject html options and video context to the HTML node
         self.options["path"] = relpath
-        html_opts_and_context = self.options.copy()
-        html_opts_and_context.update(video_context)
-        node = nodes.raw('', html_tag.render(**html_opts_and_context), format="html")  # noqa: E501
+        node = nodes.raw('', player_template.render(settings=settings, context=player_context), format="html")  # noqa: E501
         return [node]
 
 
