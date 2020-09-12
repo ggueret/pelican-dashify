@@ -26,15 +26,16 @@ RUN apt-get update && apt-get -y install --no-install-recommends ${FFMPEG_BUILD_
 	cd / && rm -rf /tmp/ffmpeg/ && apt-get remove -y ${FFMPEG_BUILD_PACKAGES} && rm -rf /var/lib/apt/lists/*
 
 # make Python 3.8 as default version
-RUN ln -sf /usr/local/bin/python3.8 /usr/local/bin/python && ln -sf /usr/local/bin/pip3.6 /usr/local/bin/pip
+RUN ln -sf /usr/local/bin/python3.8 /usr/local/bin/python && ln -sf /usr/local/bin/pip3.8 /usr/local/bin/pip
 
 # Install test packages
 RUN apt-get update && apt-get -y install --no-install-recommends \
 	gstreamer1.0-tools gstreamer1.0-plugins-base && \
 	rm -rf /var/lib/apt/lists/*
 
-#COPY . /usr/src/app
+COPY . /usr/src/app
 WORKDIR /usr/src/app
 
 RUN pip install --upgrade pip && pip install tox
+RUN pip install -e ".[testing]"
 CMD ["tox"]

@@ -1,13 +1,9 @@
 import os
-import re
 import sys
 import json
 import shlex
 import logging
-import datetime
 import subprocess as sp
-
-from .settings import DEFAULT_CONFIG, load_video_config
 from .exceptions import (
     AudioTranscodeError,
     PackingError,
@@ -111,7 +107,7 @@ def load_input_info(path, settings):
 
 
 def transcode_audio_stream(input_path, output_path, stream, bitrate, settings):
-
+    """Transcodes a single audio stream from media with the given options"""
     command = settings["AUDIO_TRANSCODE_COMMAND"].format(
         ffmpeg=settings["FFMPEG_BIN"],
         input=input_path,
@@ -130,7 +126,7 @@ def transcode_audio_stream(input_path, output_path, stream, bitrate, settings):
 
 
 def transcode_video_stream(input_path, output_path, stream, width, height, bitrate, settings):  # noqa: E501
-
+    """Transcodes a single video stream from media with the given options"""
     command = settings["VIDEO_TRANSCODE_COMMAND"].format(
         ffmpeg=settings["FFMPEG_BIN"],
         input=input_path,
@@ -154,7 +150,7 @@ def transcode_video_stream(input_path, output_path, stream, width, height, bitra
 
 
 def generate_dash_manifest(representations, output_path, settings):
-
+    """Generates a manifest.mpd file who contains every representation of media"""
     command = settings["PACK_COMMAND"].format(
         mp4box=settings["MP4BOX_BIN"],
         input=" ".join(representations),
@@ -169,20 +165,18 @@ def generate_dash_manifest(representations, output_path, settings):
             "MP4Box return code {}, sderr: {}".format(retcode, stderr))
 
 
-def dashify_video(generator, content, input_relpath, keyword):
+def dashify_video(input_relpath, content=None, keyword=None, **settings):
+    """Dashify a video with the given options"""
+    from . import pelican
+    player_context = {}
 
-    input_path = os.path.join(generator.path, input_relpath)
-    output_dir = os.path.join(generator.output_path, input_relpath)
+    input_path = os.path.join(pelican.settings["PATH"], input_relpath)
+    output_dir = os.path.join(pelican.settings["OUTPUT_PATH"], input_relpath)
 
     if not os.path.isfile(input_path):
         raise VideoProbeError("The file '{}' does not exist.".format(input_path))  # noqa: E501
 
-    pad = len(SETTINGS_PREFIX)
-    settings = {k[pad:]: content.settings[k] for k in DEFAULT_CONFIG.keys()}
-    settings.update(load_video_config(input_path))
-
     input_info = load_input_info(input_path, settings)
-    output_info = {}
 
     video_index = select_stream_by_typed_index(
         input_info["streams"],
@@ -197,17 +191,9 @@ def dashify_video(generator, content, input_relpath, keyword):
             )
         )
 
-    sexagesimal_parsed = re.match(
-        settings["SEXAGESIMAL_REGEX"], input_info["format"]["duration"]
-    ).groupdict()
-    # fixme
-    output_info["duration"] = datetime.timedelta(
-        **{k: int(v) for k, v in sexagesimal_parsed.items()}
-    )
-
     if settings["EXTRACT_TAGS"]:
         # todo: python native types
-        output_info["tags"] = input_info["format"]["tags"]
+        player_context["tags"] = input_info["format"]["tags"]
 
     # todo: generate previews
 
@@ -269,16 +255,30 @@ def dashify_video(generator, content, input_relpath, keyword):
     manifest_name = "manifest.mpd"
     manifest_path = os.path.join(output_dir, manifest_name)
 
+    # Build up the video manifest URL regarding pelican settings
+    player_context["manifest_url"] = os.path.join(
+        pelican.settings["SITEURL"],
+        input_relpath,
+        manifest_name
+    )
+
+    # Build up the poster image URL if given
+    if "PLAYER_POSTER" in settings and settings["PLAYER_POSTER"]:
+        player_context["poster_url"] = os.path.join(
+            pelican.settings.get("SITEURL", ""), settings["PLAYER_POSTER"])
+
     if not os.path.exists(manifest_path):
         logging.info("Generate DASH manifest for %s", input_relpath)
         generate_dash_manifest(output_paths, manifest_path, settings)
 
-    output_info["url"] = os.path.join(input_relpath, manifest_name)
+    if content:
+        setattr(content, keyword, player_context)
 
-    setattr(content, keyword, output_info)
+    return player_context
 
 
 def discover_dashify(generator, content):
+    from .config import settings
 
     for k, v in content.metadata.items():
         METATAG = content.settings["{}METATAG".format(SETTINGS_PREFIX)]
@@ -287,7 +287,7 @@ def discover_dashify(generator, content):
             input_relpath = v.strip(METATAG)
 
             try:
-                dashify_video(generator, content, input_relpath, k)
+                dashify_video(input_relpath, content=content, keyword=k, **settings)
 
             except Exception:
                 logging.exception("dashify errored")
