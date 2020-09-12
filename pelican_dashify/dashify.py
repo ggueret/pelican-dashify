@@ -14,6 +14,7 @@ from .exceptions import (
 
 SETTINGS_PREFIX = "DASHIFY_"
 
+
 def select_stream_by_typed_index(ffprobe_streams, index, codec_type=None):
     """will return the mixed position of a stream by codec type"""
     assert codec_type in ("audio", "video")
